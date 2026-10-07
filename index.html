@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고해성사 — 털어놓고 싶었던 이야기</title>
+  <style>
+    :root {
+      --bg: #110808;
+      --card: #1e0e0e;
+      --card2: #2a1212;
+      --accent: #c0392b;
+      --accent-glow: rgba(192,57,43,0.2);
+      --amber: #e67e22;
+      --text: #f0e0d0;
+      --text-dim: #8a6a5a;
+      --text-mid: #c0a090;
+      --border: #3a1818;
+      --border-hot: #5a2020;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', -apple-system, sans-serif;
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(17, 8, 8, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      font-size: 22px;
+      filter: drop-shadow(0 0 6px rgba(192,57,43,0.6));
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text p {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 20px;
+      padding: 4px 10px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 16px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* ── WRITE BUTTON ── */
+    .write-cta {
+      margin: 14px 14px 0;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #8b1a1a, #c0392b);
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: calc(100% - 28px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(192,57,43,0.25);
+    }
+
+    .write-cta:hover { filter: brightness(1.1); }
+
+    .write-cta .sub-text {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.75;
+      margin-left: 4px;
+    }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs {
+      display: flex;
+      overflow-x: auto;
+      padding: 12px 14px 0;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+
+    .filter-tabs::-webkit-scrollbar { display: none; }
+
+    .filter-tab {
+      white-space: nowrap;
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .filter-tab.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* ── FEED ── */
+    .feed {
+      padding: 12px 14px 100px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: transparent;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .card.hot::before { background: var(--accent); }
+    .card.warm::before { background: var(--amber); }
+
+    .card:hover {
+      border-color: var(--border-hot);
+      transform: translateY(-1px);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .anon-tag {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .anon-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .hot-badge {
+      font-size: 10px;
+      background: rgba(192,57,43,0.2);
+      color: var(--accent);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: 6px;
+    }
+
+    .time-tag {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .card-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .rxn-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .rxn-btn:hover { border-color: #5a3030; color: var(--text); }
+    .rxn-btn.voted { border-color: var(--accent); color: var(--text); background: var(--accent-glow); }
+
+    .comment-link {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── MODALS ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 300;
+      overflow-y: auto;
+    }
+
+    .overlay.open { display: block; }
+
+    .sheet {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px 22px 0 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 0 16px 30px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border-hot);
+      border-radius: 2px;
+      margin: 14px auto 18px;
+    }
+
+    /* ── WRITE FORM ── */
+    .write-header h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .write-header p {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .category-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cat-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .cat-btn.active {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--accent-glow);
+    }
+
+    .write-box {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.65;
+      resize: none;
+      min-height: 160px;
+      font-family: inherit;
+    }
+
+    .write-box:focus {
+      outline: none;
+      border-color: rgba(192,57,43,0.4);
+    }
+
+    .write-box::placeholder { color: var(--text-dim); }
+
+    .char-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .filter-alert {
+      display: none;
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.4);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #e74c3c;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .submit-main {
+      width: 100%;
+      margin-top: 14px;
+      padding: 15px;
+      background: linear-gradient(135deg, #8b1a1a, #c0392b);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .submit-main:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .form-rules {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .btn-cancel {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-dim);
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ── VIEW MODAL ── */
+    .view-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-dim);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+
+    .full-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .full-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .reaction-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .rxn-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      color: var(--text);
+    }
+
+    .rxn-card:hover, .rxn-card.voted {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .rxn-count {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+    }
+
+    .rxn-label {
+      font-size: 12px;
+      color: var(--text-mid);
+      margin-top: 4px;
+      display: block;
+    }
+
+    .comments-header {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comment-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comment-item:last-child { border-bottom: none; }
+
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+    }
+
+    .comment-type-tag {
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+
+    .comment-type-tag.sympathy { background: rgba(52,152,219,0.15); color: #3498db; }
+    .comment-type-tag.judgment { background: rgba(192,57,43,0.15); color: var(--accent); }
+
+    .comment-text {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .comment-input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      position: sticky;
+      bottom: 0;
+      background: var(--card);
+      padding: 8px 0;
+    }
+
+    .comment-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .comment-input:focus { outline: none; border-color: rgba(192,57,43,0.4); }
+    .comment-input::placeholder { color: var(--text-dim); }
+
+    .comment-post-btn {
+      padding: 10px 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    /* ── CONFESS SUCCESS ── */
+    .success-toast {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e4d2b;
+      border: 1px solid #2a6b3a;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: #7dcea0;
+      z-index: 500;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .success-toast.show {
+      display: block;
+      animation: fadeUpDown 2.5s ease-in-out forwards;
+    }
+
+    @keyframes fadeUpDown {
+      0% { opacity:0; transform: translateX(-50%) translateY(10px); }
+      15% { opacity:1; transform: translateX(-50%) translateY(0); }
+      80% { opacity:1; }
+      100% { opacity:0; }
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: rgba(17,8,8,0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 16px;
+      z-index: 200;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px 16px;
+    }
+
+    .nav-icon { font-size: 20px; }
+
+    .nav-label {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .nav-item.active .nav-label { color: var(--accent); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+
+    .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+
+    /* ── SHARE POPUP ── */
+    .share-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+
+    .share-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card2);
+      color: var(--text-mid);
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .share-btn:hover { border-color: var(--border-hot); color: var(--text); }
+
+    /* ── MISC ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 75px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      z-index: 150;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .scroll-top-btn.show { display: flex; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">🕯️</div>
+    <div class="logo-text">
+      <h1>고해성사</h1>
+      <p>털어놓고 싶었던 이야기</p>
+    </div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    <span id="online-num">247</span>명 접속
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-value" id="today-stat">43</div>
+    <div class="stat-label">오늘 고해</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="total-stat">1,892</div>
+    <div class="stat-label">총 고해</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">94%</div>
+    <div class="stat-label">익명 보장</div>
+  </div>
+</div>
+
+<!-- WRITE CTA -->
+<button class="write-cta" onclick="openWriteSheet()">
+  ✍️ 지금 털어놓기 <span class="sub-text">· 완전 익명</span>
+</button>
+
+<!-- FILTER TABS -->
+<div class="filter-tabs">
+  <button class="filter-tab active" data-filter="hot" onclick="setFilter(this, 'hot')">🔥 화제</button>
+  <button class="filter-tab" data-filter="new" onclick="setFilter(this, 'new')">🆕 최신</button>
+  <button class="filter-tab" data-filter="sympathy" onclick="setFilter(this, 'sympathy')">💙 공감순</button>
+  <button class="filter-tab" data-filter="judgment" onclick="setFilter(this, 'judgment')">⚖️ 판정순</button>
+</div>
+
+<!-- FEED -->
+<div class="feed" id="feed"></div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top-btn" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">홈</div>
+  </div>
+  <div class="nav-item" onclick="openWriteSheet()">
+    <div class="nav-icon" style="font-size:24px;color:var(--accent)">＋</div>
+    <div class="nav-label" style="color:var(--accent)">고해</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">🔔</div>
+    <div class="nav-label">알림</div>
+  </div>
+</nav>
+
+<!-- ══ WRITE SHEET ══ -->
+<div class="overlay" id="write-overlay" onclick="overlayClick(this, 'write-overlay')">
+  <div class="sheet" id="write-sheet">
+    <div class="sheet-handle"></div>
+    <div class="write-header">
+      <h2>🕯️ 고해성사</h2>
+      <p>누가 썼는지 아무도 모릅니다.<br>털어놓고 나면 조금 가벼워집니다.</p>
+    </div>
+
+    <div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">카테고리 (선택)</div>
+    <div class="category-row" id="cat-row">
+      <button class="cat-btn active" onclick="pickCat(this)">💼 직장</button>
+      <button class="cat-btn" onclick="pickCat(this)">💑 연애</button>
+      <button class="cat-btn" onclick="pickCat(this)">👨‍👩‍👧 가족</button>
+      <button class="cat-btn" onclick="pickCat(this)">🎓 학교</button>
+      <button class="cat-btn" onclick="pickCat(this)">👥 친구</button>
+      <button class="cat-btn" onclick="pickCat(this)">🔮 기타</button>
+    </div>
+
+    <textarea class="write-box" id="write-box"
+      placeholder="여기에 털어놓고 싶은 이야기를 쓰세요...&#10;&#10;예) 오늘 친구한테 거짓말을 했어. 사실은..."
+      maxlength="500"
+      oninput="onWriteInput(this)"></textarea>
+
+    <div class="char-row">
+      <span>최소 10자 이상</span>
+      <span><span id="char-cnt">0</span> / 500</span>
+    </div>
+
+    <div class="filter-alert" id="pii-alert">
+      ⚠️ 개인정보가 감지되었습니다.<br>전화번호·이메일·계좌번호 등을 지워주세요.
+    </div>
+
+    <button class="submit-main" id="submit-btn" onclick="submitConfession()" disabled>
+      익명으로 올리기
+    </button>
+
+    <div class="form-rules" style="margin-top:12px">
+      🔒 게시 후 작성자 추적 불가 · 서버에 IP 저장 없음<br>
+      ⚠️ 실명·연락처·계좌 자동 차단 / 특정인 신상 금지<br>
+      🚩 타인 신상 게시 시 즉시 삭제 + 신고
+    </div>
+    <button class="btn-cancel" onclick="closeSheet('write-overlay')">닫기</button>
+  </div>
+</div>
+
+<!-- ══ VIEW SHEET ══ -->
+<div class="overlay" id="view-overlay" onclick="overlayClick(this, 'view-overlay')">
+  <div class="sheet" id="view-sheet">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div class="success-toast" id="toast">✅ 고해성사가 올라갔습니다. 당신 혼자가 아닙니다.</div>
+
+<script>
+/* ── DATA ─────────────────────────── */
+const CONFESSIONS = [
+  {
+    id:1, cat:'연애',
+    text:"남자친구한테 1년 동안 거짓말했어 취업했다고 근데 사실 매일 카페에서 시간 보낸 거잖아 이제 어떡하지 그 사람 나 믿어주고 있는데",
+    anon:"새벽고양이", icon:"🐱", time:"3분 전", intensity:"hot",
+    reactions:{sympathy:234, metoo:89, hmm:45, judgment:167},
+    comments:[
+      {anon:"파란물고기", icon:"🐟", text:"나도 비슷한 거 했는데... 결국엔 말하게 됐어. 괜찮아질 거야", type:"sympathy"},
+      {anon:"돌멩이99", icon:"🪨", text:"1년이나? 솔직히 말해야 해요. 상대방이 알면 더 상처받아요", type:"judgment"},
+      {anon:"무지개떡", icon:"🌈", text:"ㅠㅠㅠ 진짜 힘들었겠다", type:"sympathy"},
+      {anon:"파란물고기", icon:"🐟", text:"사람이라면 다 그런 거 하나쯤은 있음. 너무 자책하지 마", type:"sympathy"},
+    ]
+  },
+  {
+    id:2, cat:'직장',
+    text:"회의에서 후배가 낸 아이디어를 내 거처럼 발표했다. 팀장이 나를 칭찬했고 나는 아무 말도 못 했다. 지금도 그 후배는 그 아이디어가 채택됐는지조차 모른다.",
+    anon:"양복단추", icon:"🔘", time:"12분 전", intensity:"hot",
+    reactions:{sympathy:145, metoo:23, hmm:89, judgment:512},
+    comments:[
+      {anon:"소나무향", icon:"🌲", text:"솔직히 이건 좀 잘못됐다... 후배한테 기회를 줬어야", type:"judgment"},
+      {anon:"새벽별", icon:"⭐", text:"직장생활 하다 보면 이런 거 한 번씩은 다 있음. 그 후배 좋은 기회 더 있을 거야", type:"sympathy"},
+      {anon:"돌멩이99", icon:"🪨", text:"아직 늦지 않았어요. 인정해주면 어때요", type:""},
+    ]
+  },
+  {
+    id:3, cat:'친구',
+    text:"친구 발표 망해서 다행이다 생각했음... 걔가 잘되면 나만 뒤처지는 것 같아서ㅠ 진짜 나쁜 것 같아 나",
+    anon:"초록감자", icon:"🥔", time:"27분 전", intensity:"warm",
+    reactions:{sympathy:567, metoo:234, hmm:56, judgment:23},
+    comments:[
+      {anon:"파란물고기", icon:"🐟", text:"이런 감정 느끼는 사람 엄청 많아. 느끼는 거랑 행동하는 거는 다른 거야", type:"sympathy"},
+      {anon:"새벽별", icon:"⭐", text:"솔직하게 인정하는 것만으로도 대단한 거임", type:"sympathy"},
+    ]
+  },
+  {
+    id:4, cat:'가족',
+    text:"아버지가 아프다는 소식을 들었다. 솔직히 처음 든 생각은 '이제 어떡하지'가 아니라 '유산은 얼마나 되나'였다. 그 생각을 한 내가 너무 싫다.",
+    anon:"회색하늘", icon:"☁️", time:"1시간 전", intensity:"hot",
+    reactions:{sympathy:891, metoo:345, hmm:123, judgment:156},
+    comments:[
+      {anon:"무지개떡", icon:"🌈", text:"인간이 위기 상황에서 이기적인 생각을 먼저 하는 건 본능이에요. 나쁜 사람이 아님", type:"sympathy"},
+      {anon:"소나무향", icon:"🌲", text:"그런 생각 했다고 나쁜 게 아니에요. 아버지 옆에 있어드리면 돼요", type:"sympathy"},
+      {anon:"돌멩이99", icon:"🪨", text:"그 이후에 어떻게 했는지가 중요한 거죠", type:""},
+    ]
+  },
+  {
+    id:5, cat:'직장',
+    text:"팀원이 번아웃으로 휴직 신청했을 때 속으로 기뻤다. 업무가 내게 올 텐데 이미 맡은 게 너무 많아서... 그 사람이 빨리 나가줬으면 했다. 지금 그 팀원 복직 소식 들으니 또 싫다는 생각이 든다.",
+    anon:"고무지우개", icon:"📝", time:"2시간 전", intensity:"warm",
+    reactions:{sympathy:234, metoo:189, hmm:67, judgment:445},
+    comments:[
+      {anon:"새벽별", icon:"⭐", text:"직장인들 다 이런 생각 해. 시스템 문제지 당신 잘못 아님", type:"sympathy"},
+    ]
+  },
+  {
+    id:6, cat:'가족',
+    text:"엄마가 암 선고 받았는데 첫 반응이 눈물이 아니라 '내 결혼식은 어떡하지'였어 진짜 나 이상한 거 맞지",
+    anon:"새벽고양이", icon:"🐱", time:"3시간 전", intensity:"hot",
+    reactions:{sympathy:1245, metoo:456, hmm:89, judgment:203},
+    comments:[
+      {anon:"파란물고기", icon:"🐟", text:"충격이 오면 엉뚱한 생각이 먼저 와. 그게 이상한 게 아니에요", type:"sympathy"},
+      {anon:"무지개떡", icon:"🌈", text:"엄마도 이해할 거야. 지금 옆에 있어드리는 게 제일 중요해", type:"sympathy"},
+      {anon:"소나무향", icon:"🌲", text:"걱정 많이 됐겠다. 엄마 빨리 나으시길", type:"sympathy"},
+    ]
+  },
+  {
+    id:7, cat:'기타',
+    text:"도서관에서 자리 맡아놓고 6시간 자리 지킴ㅋㅋ 공부는 1시간도 안 했는데 남들한테 자리 없다고 거짓말함 ㅈㅅ",
+    anon:"초록감자", icon:"🥔", time:"4시간 전", intensity:"warm",
+    reactions:{sympathy:789, metoo:612, hmm:45, judgment:312},
+    comments:[
+      {anon:"새벽별", icon:"⭐", text:"ㅋㅋㅋㅋ 이거 나도 했음 나도 고해성사 해야 하나", type:"sympathy"},
+      {anon:"돌멩이99", icon:"🪨", text:"이런 거 공개적으로 고백하는 용기...ㄷㄷ", type:""},
+    ]
+  },
+  {
+    id:8, cat:'친구',
+    text:"30년 지기 친구가 사업 실패했다는 말을 듣고 솔직히 안도했다. 그 친구가 성공할수록 내 삶이 초라하게 느껴졌기 때문에. 이게 친구냐고.",
+    anon:"회색하늘", icon:"☁️", time:"5시간 전", intensity:"warm",
+    reactions:{sympathy:567, metoo:234, hmm:123, judgment:234},
+    comments:[
+      {anon:"파란물고기", icon:"🐟", text:"친구 관계에서 이런 감정 드는 거 생각보다 흔해요. 털어놨으니 됐어요", type:"sympathy"},
+      {anon:"무지개떡", icon:"🌈", text:"근데 이렇게 느끼는 사람이 진짜 그 친구 걱정해주는 사람이기도 하잖아요", type:"sympathy"},
+    ]
+  },
+  {
+    id:9, cat:'연애',
+    text:"남자친구한테 \"나 이번 달 적금 들었어\"라고 했는데 사실 쇼핑에 다 쓴 거야 나 진짜 최악이다 이미 3번째야",
+    anon:"빨간낙엽", icon:"🍂", time:"6시간 전", intensity:"warm",
+    reactions:{sympathy:1123, metoo:445, hmm:67, judgment:456},
+    comments:[
+      {anon:"새벽별", icon:"⭐", text:"소비 조절이 진짜 어렵긴 해. 근데 거짓말 계속하면 더 커질 수 있어요", type:""},
+      {anon:"돌멩이99", icon:"🪨", text:"3번이면 패턴이에요. 상담 받아보는 거 어떨까요", type:"judgment"},
+    ]
+  },
+  {
+    id:10, cat:'직장',
+    text:"부고 연락이 왔는데 일이 너무 바빠서 속으로 '왜 이런 때 연락하나' 생각했다. 그리고 장례식도 안 갔다.",
+    anon:"양복단추", icon:"🔘", time:"8시간 전", intensity:"warm",
+    reactions:{sympathy:123, metoo:45, hmm:234, judgment:678},
+    comments:[
+      {anon:"소나무향", icon:"🌲", text:"그 분이 많이 서운하셨겠어요...", type:"judgment"},
+      {anon:"파란물고기", icon:"🐟", text:"그래도 이렇게 털어놓는 게 참회의 시작인 것 같아요", type:"sympathy"},
+    ]
+  }
+];
+
+const ANON_POOL = [
+  {n:"새벽고양이",i:"🐱"},{n:"파란물고기",i:"🐟"},{n:"초록감자",i:"🥔"},
+  {n:"회색하늘",i:"☁️"},{n:"양복단추",i:"🔘"},{n:"고무지우개",i:"📝"},
+  {n:"무지개떡",i:"🌈"},{n:"소나무향",i:"🌲"},{n:"빨간낙엽",i:"🍂"},
+  {n:"노란민들레",i:"🌼"},{n:"하얀눈꽃",i:"❄️"},{n:"돌멩이99",i:"🪨"},
+  {n:"새벽별",i:"⭐"},{n:"보라달",i:"🌙"},{n:"검정고양이",i:"🐈‍⬛"}
+];
+
+const PII_PATTERNS = [
+  /01[016789]-?\d{3,4}-?\d{4}/,
+  /\d{6}-[1-4]\d{6}/,
+  /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/,
+  /\d{3}-?\d{2}-?\d{5}/,
+  /\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}/,
+  /[0-9]{10,14}/,
+  /카톡\s*[:：]?\s*[\w가-힣]{2,}/,
+  /카카오\s*[:：]?\s*[\w가-힣]{2,}/,
+  /인스타\s*[:：@]?\s*\w+/i,
+  /텔레\s*[:：@]?\s*\w+/i,
+];
+
+/* ── STATE ─────────────────────────── */
+let currentFilter = 'hot';
+let selectedId = null;
+let userVotes = {};
+let selectedCat = '직장';
+let confessions = [...CONFESSIONS];
+
+/* ── RENDER FEED ─────────────────────── */
+function fmtN(n) {
+  if (n >= 10000) return (n/10000).toFixed(1)+'만';
+  if (n >= 1000) return (n/1000).toFixed(1)+'k';
+  return n;
+}
+
+function totalRxn(r) {
+  return r.sympathy + r.metoo + r.hmm + r.judgment;
+}
+
+function getSortedList() {
+  let list = [...confessions];
+  if (currentFilter === 'new') return list.reverse();
+  if (currentFilter === 'sympathy') return list.sort((a,b)=>b.reactions.sympathy-a.reactions.sympathy);
+  if (currentFilter === 'judgment') return list.sort((a,b)=>b.reactions.judgment-a.reactions.judgment);
+  return list.sort((a,b)=>totalRxn(b.reactions)-totalRxn(a.reactions));
+}
+
+function renderFeed() {
+  const feed = document.getElementById('feed');
+  const list = getSortedList();
+
+  feed.innerHTML = list.map(c => {
+    const r = c.reactions;
+    const voted = userVotes[c.id];
+    const isHot = totalRxn(r) > 700 || c.intensity === 'hot';
+    const isWarm = !isHot && (totalRxn(r) > 300 || c.intensity === 'warm');
+
+    return `
+      <div class="card ${isHot?'hot':isWarm?'warm':''}" onclick="openView(${c.id})">
+        <div class="card-meta">
+          <div class="anon-tag">
+            <div class="anon-avatar">${c.icon}</div>
+            익명의 ${c.anon}
+            ${isHot?'<span class="hot-badge">🔥 화제</span>':''}
+          </div>
+          <span class="time-tag">${c.time}</span>
+        </div>
+        <div class="card-text">${c.text}</div>
+        <div class="card-footer">
+          <button class="rxn-btn ${voted==='sympathy'?'voted':''}" onclick="quickVote(event,${c.id},'sympathy')">
+            🥺 공감 <strong>${fmtN(r.sympathy+(voted==='sympathy'?1:0))}</strong>
+          </button>
+          <button class="rxn-btn ${voted==='metoo'?'voted':''}" onclick="quickVote(event,${c.id},'metoo')">
+            🙋 나도 <strong>${fmtN(r.metoo+(voted==='metoo'?1:0))}</strong>
+          </button>
+          <button class="rxn-btn ${voted==='judgment'?'voted':''}" onclick="quickVote(event,${c.id},'judgment')">
+            ⚖️ 판정 <strong>${fmtN(r.judgment+(voted==='judgment'?1:0))}</strong>
+          </button>
+          <div class="comment-link">💬 ${c.comments.length}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ── FILTER ─────────────────────────── */
+function setFilter(el, f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderFeed();
+}
+
+/* ── REACTIONS ─────────────────────── */
+function quickVote(e, id, type) {
+  e.stopPropagation();
+  if (userVotes[id] === type) { delete userVotes[id]; }
+  else { userVotes[id] = type; }
+  renderFeed();
+}
+
+/* ── WRITE SHEET ─────────────────────── */
+function openWriteSheet() {
+  document.getElementById('write-overlay').classList.add('open');
+  document.getElementById('write-box').value = '';
+  document.getElementById('char-cnt').textContent = '0';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('pii-alert').style.display = 'none';
+}
+
+function pickCat(el) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedCat = el.textContent.replace(/^[^\s]+\s/,'');
+}
+
+function onWriteInput(el) {
+  const txt = el.value;
+  const len = txt.length;
+  document.getElementById('char-cnt').textContent = len;
+
+  const hasPII = PII_PATTERNS.some(p => p.test(txt));
+  document.getElementById('pii-alert').style.display = hasPII ? 'block' : 'none';
+  document.getElementById('submit-btn').disabled = len < 10 || hasPII;
+}
+
+function submitConfession() {
+  const txt = document.getElementById('write-box').value.trim();
+  if (!txt || txt.length < 10) return;
+  if (PII_PATTERNS.some(p => p.test(txt))) return;
+
+  const r = ANON_POOL[Math.floor(Math.random() * ANON_POOL.length)];
+  const newItem = {
+    id: Date.now(),
+    cat: selectedCat || '기타',
+    text: txt,
+    anon: r.n,
+    icon: r.i,
+    time: '방금 전',
+    intensity: 'mild',
+    reactions: {sympathy:0, metoo:0, hmm:0, judgment:0},
+    comments: []
+  };
+
+  confessions.unshift(newItem);
+
+  const todayEl = document.getElementById('today-stat');
+  todayEl.textContent = parseInt(todayEl.textContent) + 1;
+  const totalEl = document.getElementById('total-stat');
+  const tv = parseInt(totalEl.textContent.replace(',',''));
+  totalEl.textContent = (tv + 1).toLocaleString();
+
+  closeSheet('write-overlay');
+  renderFeed();
+
+  const toast = document.getElementById('toast');
+  toast.className = 'success-toast show';
+  setTimeout(() => { toast.className = 'success-toast'; }, 3000);
+}
+
+/* ── VIEW SHEET ─────────────────────── */
+function openView(id) {
+  selectedId = id;
+  renderViewSheet();
+  document.getElementById('view-overlay').classList.add('open');
+}
+
+function renderViewSheet() {
+  const c = confessions.find(x => x.id === selectedId);
+  if (!c) return;
+  const r = c.reactions;
+  const voted = userVotes[c.id];
+
+  const commentHTML = c.comments.map(cm => `
+    <div class="comment-item">
+      <div class="comment-meta">
+        ${cm.icon} 익명의 ${cm.anon}
+        ${cm.type === 'sympathy' ? '<span class="comment-type-tag sympathy">공감</span>' : ''}
+        ${cm.type === 'judgment' ? '<span class="comment-type-tag judgment">판정</span>' : ''}
+      </div>
+      <div class="comment-text">${cm.text}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('view-sheet').innerHTML = `
+    <div class="sheet-handle"></div>
+    <button class="view-back-btn" onclick="closeSheet('view-overlay')">← 목록으로</button>
+
+    <div class="anon-tag" style="margin-bottom:12px;font-size:13px">
+      <div class="anon-avatar" style="width:30px;height:30px;font-size:16px">${c.icon}</div>
+      익명의 ${c.anon} · ${c.time} · <span style="color:var(--text-dim)">${c.cat}</span>
+    </div>
+
+    <div class="full-card">
+      <div class="full-text">${c.text}</div>
+    </div>
+
+    <div class="reaction-grid">
+      <button class="rxn-card ${voted==='sympathy'?'voted':''}" onclick="viewVote('sympathy')">
+        <span class="rxn-count">${fmtN(r.sympathy+(voted==='sympathy'?1:0))}</span>
+        <span class="rxn-label">🥺 공감해</span>
+      </button>
+      <button class="rxn-card ${voted==='metoo'?'voted':''}" onclick="viewVote('metoo')">
+        <span class="rxn-count">${fmtN(r.metoo+(voted==='metoo'?1:0))}</span>
+        <span class="rxn-label">🙋 나도ㅠ</span>
+      </button>
+      <button class="rxn-card ${voted==='hmm'?'voted':''}" onclick="viewVote('hmm')">
+        <span class="rxn-count">${fmtN(r.hmm+(voted==='hmm'?1:0))}</span>
+        <span class="rxn-label">🤔 흠...</span>
+      </button>
+      <button class="rxn-card ${voted==='judgment'?'voted':''}" onclick="viewVote('judgment')">
+        <span class="rxn-count">${fmtN(r.judgment+(voted==='judgment'?1:0))}</span>
+        <span class="rxn-label">⚖️ 판정</span>
+      </button>
+    </div>
+
+    <div class="share-row">
+      <button class="share-btn" onclick="shareConfession()">🔗 공유</button>
+      <button class="share-btn" onclick="reportConfession()">🚩 신고</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="comments-header">💬 댓글 <span style="color:var(--accent)">${c.comments.length}</span></div>
+    <div id="comment-list">${commentHTML}</div>
+
+    <div class="comment-input-row">
+      <input type="text" class="comment-input" id="new-cmt-input"
+        placeholder="댓글 달기 (익명)" maxlength="200"
+        onkeypress="if(event.key==='Enter')postComment()" />
+      <button class="comment-post-btn" onclick="postComment()">등록</button>
+    </div>
+  `;
+}
+
+function viewVote(type) {
+  if (!selectedId) return;
+  if (userVotes[selectedId] === type) { delete userVotes[selectedId]; }
+  else { userVotes[selectedId] = type; }
+  renderViewSheet();
+  renderFeed();
+}
+
+function postComment() {
+  const input = document.getElementById('new-cmt-input');
+  const txt = input.value.trim();
+  if (!txt) return;
+
+  const c = confessions.find(x => x.id === selectedId);
+  if (!c) return;
+
+  const r = ANON_POOL[Math.floor(Math.random() * ANON_POOL.length)];
+  c.comments.push({ anon: r.n, icon: r.i, text: txt, type: '' });
+
+  input.value = '';
+  renderViewSheet();
+  renderFeed();
+
+  setTimeout(() => {
+    const list = document.getElementById('comment-list');
+    if (list) list.lastElementChild?.scrollIntoView({ behavior:'smooth' });
+  }, 100);
+}
+
+function shareConfession() {
+  const c = confessions.find(x => x.id === selectedId);
+  const shareText = `[고해성사] "${c.text.slice(0,50)}..." 공감 ${fmtN(c.reactions.sympathy)} / 판정 ${fmtN(c.reactions.judgment)}`;
+  if (navigator.share) {
+    navigator.share({ title:'고해성사', text: shareText, url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => alert('클립보드에 복사되었습니다.'));
+  }
+}
+
+function reportConfession() {
+  if (confirm('이 고해를 신고하시겠습니까?\n특정인 신상 노출 시 24시간 내 삭제됩니다.')) {
+    alert('신고가 접수되었습니다. 검토 후 처리됩니다.');
+  }
+}
+
+/* ── SHEET UTILS ─────────────────────── */
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function overlayClick(el, id) {
+  if (el === event.target) closeSheet(id);
+}
+
+/* ── LIVE COUNTERS ─────────────────── */
+setInterval(() => {
+  const el = document.getElementById('online-num');
+  let v = parseInt(el.textContent);
+  v = Math.max(180, Math.min(350, v + Math.floor(Math.random()*7-3)));
+  el.textContent = v;
+}, 3500);
+
+/* ── SCROLL TOP BTN ─────────────────── */
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scroll-top');
+  btn.classList.toggle('show', window.scrollY > 300);
+});
+
+/* ── INIT ─────────────────────────── */
+renderFeed();
+</script>
+</body>
+</html>
